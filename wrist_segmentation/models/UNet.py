@@ -54,7 +54,7 @@ def model_gen(config):
 
     # Start model building
     img_rows, img_cols = config.IMAGE_SIZE
-    input_shape = (img_rows, img_cols, None)
+    input_shape = (img_rows, img_cols, 1)
 
     # Encoder path
     inputs = Input(input_shape)

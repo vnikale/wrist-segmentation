@@ -2,6 +2,8 @@ import os
 from datetime import datetime
 import yaml
 from pathlib import Path
+from tensorflow.keras.optimizers import Adam
+from .metrics import dice_coef
 
 class config:
     '''
@@ -25,6 +27,8 @@ class config:
 
         self._check_childrens()
 
+        self._set_functions()
+
         self.MODEL_NAME_LOG = self.MODEL_NAME + '_' + str(self.N_DOWN_LAYERS) + 'down_' + str(self.N_UP_LAYERS) + 'up_'
 
         self.logdir = os.path.join(self.MYFOLDER, 'output', self.LOGDIRECTORY, self.MODEL_NAME_LOG)
@@ -37,6 +41,22 @@ class config:
         assert 'MODEL_NAME' in self.__dict__.keys(), 'MODEL_NAME should be defined in config.yaml'
         assert 'N_DOWN_LAYERS' in self.__dict__.keys(), 'N_DOWN_LAYERS should be defined in config.yaml'
         assert 'N_UP_LAYERS' in self.__dict__.keys(), 'N_UP_LAYERS should be defined in config.yaml'
+
+    def _set_functions(self):
+        metrics = {'dice_coef':
+                   dice_coef,}
+        optimizers = {'Adam':
+                      Adam,}
+
+        if self.METRIC in metrics.keys():
+            self.METRIC = metrics[self.METRIC]
+        else:
+            raise NotImplementedError('Metric is not found')
+
+        if self.OPTIMIZER in optimizers.keys():
+            self.OPTIMIZER = optimizers[self.OPTIMIZER]
+        else:
+            raise NotImplementedError('Optimizer is not found')
 
     def make_dirs(self,path):
         if not os.path.exists(path):
