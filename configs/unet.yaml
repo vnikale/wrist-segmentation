@@ -1,0 +1,24 @@
+    ACTIVATION: 'relu'
+    PADDING: 'same'
+    FILTERS: 64
+    NOISE_LEVEL: 0.5
+    PDROP: 0.4
+    K_INITIALIZER: 'he_normal'
+    CHANNELS: 3
+    POOL_SIZE: (2, 2)
+    IMAGE_SIZE: (256, 256)
+    N_DOWN_LAYERS: 4
+    N_UP_LAYERS: 4
+    MODEL_NAME: 'UNet'
+    # MYFOLDER: "C:\\users\\nikita.vladimirov\\"
+    # MYFOLDER: "\\\\STORE\\users\\nikita.vladimirov\\nikita.vladimirov\\retrain\\"
+    MYFOLDER: r'D:\new_SRW\to_class\logs\\'
+
+    LOSS: 'binary_crossentropy'
+    LR: !!float 5e-3
+    OPTIMIZER: Adam
+    METRIC: dice_coef
+    AUGMENT: True
+    BATCH_SIZE: 32
+    EPOCHS: 500
+    FIT_VERBOSE: 1

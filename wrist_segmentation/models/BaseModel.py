@@ -4,7 +4,8 @@ import time
 
 class BaseModel:
     '''
-    BaseModel class used in initial work.
+    BaseModel class used in initial work. It was designed to use keras functional api.
+    To use class api please create its realization.
     '''
     def __init__(self, config):
         self.config = config
@@ -38,11 +39,12 @@ class BaseModel:
 
         start = time.time()
         if valid == None:
+            validation_split = config.VALIDATION_SPLIT if 'VALIDATION_SPLIT' is in config.keys else 0.1
             history = self.model.fit(train[0],train[1],
                                      batch_size=config.BATCH_SIZE,
                                      epochs=config.EPOCHS,
                                      verbose=config.FIT_VERBOSE,
-                                     validation_split=0.1,
+                                     validation_split=validation_split,
                                      callbacks=callbacks)
         else:
             history = self.model.fit(train,
@@ -62,7 +64,7 @@ class BaseModel:
         print('Time of training:', self.timeoftrain)
         self.history = history
 
-    def evaluate(self,model_path,config,test=None):
+    def evaluate(self,model_path,test=None):
         # assert test is not None
         config = self.config
 

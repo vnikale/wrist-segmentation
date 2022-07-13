@@ -18,6 +18,14 @@ Examples of segmentation from [[1]]:
     - `./wrist_segmentation/utils` - sources of utilities scripts
 - `./output` - folder containing output files e.g. plots etc
 
+# Installation
+In order to install the project you should have installed pip and use the following command inside the repo folder:
+```
+pip install -e .
+```
+It will install the project with requirements.
+It recommended installing it in a separated virtual env or a conda env.
+
 
 # Author
 `Nikita Vladimirov` 

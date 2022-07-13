@@ -1,0 +1,28 @@
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "wrist_segmentation"
+version = "0.9.0"
+description='Segmentation of a wrist cartilage on MRI'
+authors = [
+  {email = "vladimnikita@gmail.com"},
+  {name = "Nikita Vladimirov"}
+]
+dependencies = [
+    'importlib-metadata; python_version<"3.9"',
+    "natsort==8.1.0",
+    "nibabel==4.0.1",
+    "numpy==1.23.1",
+    "PyYAML==6.0",
+    "scipy==1.8.1",
+    "tensorflow-gpu==2.9.1",
+    "tqdm==4.64.0",
+    "opencv-python"
+]
+
+[tool.setuptools.packages.find]
+where = ["wrist_segmentation"]  # ["."] by default
+include = ["wrist_segmentation*"]  # ["*"] by default
+namespaces = false  # true by default

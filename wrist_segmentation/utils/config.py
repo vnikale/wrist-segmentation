@@ -5,7 +5,7 @@ from pathlib import Path
 from tensorflow.keras.optimizers import Adam
 from .metrics import dice_coef
 
-class config:
+class Config:
     '''
     Config class. Config should be defined in the .yaml config file in the 'configs' folder.
     '''
