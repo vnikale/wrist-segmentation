@@ -39,7 +39,7 @@ class BaseModel:
 
         start = time.time()
         if valid == None:
-            validation_split = config.VALIDATION_SPLIT if 'VALIDATION_SPLIT' is in config.keys else 0.1
+            validation_split = config.VALIDATION_SPLIT if 'VALIDATION_SPLIT' in config.config.keys() else 0.1
             history = self.model.fit(train[0],train[1],
                                      batch_size=config.BATCH_SIZE,
                                      epochs=config.EPOCHS,
