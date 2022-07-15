@@ -14,6 +14,8 @@ import re
 
 
 def aucpr_calc(true_y, pred_y):
+    # TODO: refactor this function to descent form
+
     precision, recall, thresholds = precision_recall_curve(true_y.flatten(),pred_y.flatten())
     # f1 = f1_score(pred_y.flatten(),pred.flatten())
 
@@ -63,7 +65,9 @@ def aucpr_calc(true_y, pred_y):
 def DSC2D(true_y, pred_y,
           model_name,
           dataFold,
+          model_path,
           thr_aucpr=0.5):
+    # TODO: refactor this function to descent form
 
     dsc = dice_coef
 
@@ -104,7 +108,7 @@ def DSC2D(true_y, pred_y,
     fp.write ("\nTime: "+datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
     fp.write ("\nOpened: %s\nmean DSC: %.5f" % (model_path, np.mean(DSC) ) )
     fp.write ("\nDataset folder: %s\n" % (dataFold))
-    fp.write("\nThreshold auc: %g\nThreshold manual %g" % (thr_prerec,d))
+    fp.write("\nThreshold auc: %g\nThreshold manual %g" % (thr_aucpr,d))
 
     fp.close()
 
@@ -121,8 +125,10 @@ def vol_csa_dsc(true_x, true_y,
                 recall2D,
                 precision2D,
                 model_path,
-                folder=r'docs\newdata(cv6)\\',
+                folder=r'output\docs\newdata(cv6)\\',
                 thr_prerec=0.5):
+
+    #TODO: refactor this function to descent form
 
     log_fold = folder + model_name
     if not os.path.exists(log_fold):
@@ -184,30 +190,18 @@ def vol_csa_dsc(true_x, true_y,
                        Line2D([0], [0], marker='s', color='w', label='FN',
                               markerfacecolor='b', markersize=15)]
 
-    # img_rgb3 = (img_rgb3 - np.min(img_rgb3))/(np.max(img_rgb3)-np.min(img_rgb3))
-    # img_rgb2 = (img_rgb2 - np.min(img_rgb2))/(np.max(img_rgb2)-np.min(img_rgb2))
-
     plt.legend(handles=legend_elements, loc='best')
     plt.imshow(img_rgb3[n, :, :, :])
-    # plt.imshow(FP[n,:,:,0])
 
     print('DSC on the full test set: ', np.mean(DSC), '\n')
     args = np.argwhere(np.invert(DSC < 1 - 1e-4))
     print('DSC on the full test set without 0s and 1s: ', np.mean(np.delete(DSC, args)), '\n')
 
-    # print(np.argwhere(np.abs(DSC < 1e-4)),'\n\n',np.argwhere(np.abs(DSC > 1-1e-4)))
-
     def VOE_np(y_pred, y_true):
         y_true = y_true.flatten().astype(bool)
         y_pred = y_pred.flatten().astype(bool)
-        #     print(y_true,y_pred)
-        #     return 100*(1 - jaccard_score(y_true, y_pred))
         return 100 * (1. - np.logical_and(y_pred, y_true).astype(float).sum() / (
                     np.logical_or(y_pred, y_true).astype(float).sum() + 1e-3))
-        #     intersection = np.sum(y_pred * y_true)
-        #     union = (y_pred.shape[0] + y_true.shape[0]) - intersection
-        # #     print(intersection,union,y_pred.shape[0])
-        #     return 100*(1 - intersection / union)
 
     VOE = np.empty((0,))
     AUC = np.empty((0,))
@@ -222,14 +216,6 @@ def vol_csa_dsc(true_x, true_y,
     VOL_true = np.empty((0,))
     VOL_pred = np.empty((0,))
 
-    # pres = np.empty((0,))
-    # reca = np.empty((0,))
-
-    # TPs = np.empty((0,))
-    # FPs = np.empty((0,))
-    # TNs = np.empty((0,))
-    # FNs = np.empty((0,))
-
     CONF = np.empty((0, 4))
     cart = np.empty((0,))
     car_pd0 = pd.DataFrame([])
@@ -237,33 +223,23 @@ def vol_csa_dsc(true_x, true_y,
     k = 0
     for i in range(pat_len.shape[0]):
         if pat_len[i] != 0:
-            #         print('Case: ',i+1)
-            #         print(np.arange(1,pat_len[i]+1))
-            #         print(np.arange(prev,prev+pat_len[i]),'\n')
-
             DSC_pd = pd.DataFrame(np.array(DSC[prev:prev + pat_len[i]]), columns=['DSC,Case {0}'.format(i + 1)])
             DSC_pd0 = pd.concat([DSC_pd0, DSC_pd], axis=1)
             #         print(DSC[prev:prev+pat_len[i]])
             f3 = plt.figure(figsize=(10, 5))
             ax1, = plt.plot(range(1, pat_len[i] + 1), DSC[prev:prev + pat_len[i]], 'bo-', label='DSC')
-            plt.grid(True);
+            plt.grid(True)
             DSC_3D = np.append(DSC_3D, dsc(tr_pred[prev:prev + pat_len[i], :, :, 0],
                                            test_mask[prev:prev + pat_len[i], :, :, 0]))
             #         print(DSC_3D,k)
 
             precision, recall, thresholds = precision_recall_curve(test_mask[prev:prev + pat_len[i], :, :, 0].flatten(),
                                                                    tr_pred[prev:prev + pat_len[i], :, :, 0].flatten())
-            # f1 = f1_score(test_mask.flatten(),pred.flatten())
             aucpr = auc(recall, precision)
-
-            # pres = np.append(pres,precision)
-            # reca = np.append(reca,recall)
 
             tn, fp, fn, tp = confusion_matrix(test_mask[prev:prev + pat_len[i], :, :, 0].flatten(),
                                               tr_pred[prev:prev + pat_len[i], :, :, 0].flatten()).ravel()
             CONF = np.append(CONF, np.array([[tn], [fp], [fn], [tp]]).transpose(), axis=0)
-            # TPs = np.append(TPs,tp)
-            # FPs = np.append(FPs,fp)
 
             VOE = np.append(VOE, VOE_np(tr_pred[prev:prev + pat_len[i], :, :, 0],
                                         test_mask[prev:prev + pat_len[i], :, :, 0]))
@@ -271,12 +247,11 @@ def vol_csa_dsc(true_x, true_y,
 
             plt.title('Case {0}, 3D DSC: {1:.4f}'.format(i + 1, DSC_3D[k]))
 
-            #         plt.title('Case {0}, 3D DSC: {1:.4f}, Volume of GT: {2:g}, Volume predicted {3:g}'.format(i+1, DSC_3D[k],np.sum(test_mask[prev:prev+pat_len[i],:,:,0])*vc,np.sum(tr_pred[prev:prev+pat_len[i],:,:,0])*vc) )
             k += 1
-            #         plt.title('Case {0} DSC: {1:.4f}'.format(i,np.mean(DSC[prev:prev+pat_len[i]])))
-            plt.xlim([0, pat_len[i] + 1 + 1]);
+
+            plt.xlim([0, pat_len[i] + 1 + 1])
             plt.ylim([0, 1.2])
-            plt.xlabel('№ of slice');
+            plt.xlabel('№ of slice')
             plt.ylabel('DSC, Cartilage')
             maxx = max(cartilage[prev:prev + pat_len[i]])
             ax2, = plt.plot(range(1, pat_len[i] + 1), cartilage[prev:prev + pat_len[i]] / maxx, 'rd--',
@@ -320,21 +295,6 @@ def vol_csa_dsc(true_x, true_y,
     log = os.path.join(log_fold, xlx)
     mat = pd.DataFrame(data=CONF, columns=['tn', 'fp', 'fn', 'tp'])
     mat.to_excel(log)
-
-    # xlx = 'recall' + model_name + '.xlsx'
-    # log = os.path.join(log_fold,xlx)
-    # REC = pd.DataFrame(data=reca)
-    # REC.to_excel(log)
-
-    # xlx = 'TP' + model_name + '.xlsx'
-    # log = os.path.join(log_fold,xlx)
-    # TP = pd.DataFrame(data=TPs)
-    # TP.to_excel(log)
-
-    # xlx = 'FP' + model_name + '.xlsx'
-    # log = os.path.join(log_fold,xlx)
-    # FP = pd.DataFrame(data=FPs)
-    # FP.to_excel(log)
 
     s = re.findall('/(\w+\W\w+)/', model_path)
     # DSC_pd0.to_excel('DSC_unet_al_{0}_{1}.xlsx'.format(s,'dataFold'))

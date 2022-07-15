@@ -5,25 +5,32 @@ from pathlib import Path
 from tensorflow.keras.optimizers import Adam
 from .metrics import dice_coef
 
-class Config:
-    '''
-    Config class. Config should be defined in the .yaml config file in the 'configs' folder.
-    '''
-
-    def __init__(self,yaml_file, log_config = False):
+class BaseConfig():
+    def __init__(self, yaml_file):
         script_dir = Path(__file__).parents[2]
         self.MYFOLDER = script_dir
 
-        file_path = os.path.join(script_dir, 'configs' ,yaml_file)
+        file_path = os.path.join(script_dir, 'configs', yaml_file + '.yaml')
         with open(file_path, "r") as stream:
             try:
                 self.config = yaml.safe_load(stream)
             except yaml.YAMLError as exc:
                 print(exc)
-
         self.LOGDIRECTORY = 'logs'
         for k, v in self.config.items():
             setattr(self, k, v)
+
+
+    def merge(self, cfg):
+        for k, v in cfg.__dict__.items():
+            setattr(self, k, v)
+
+class Config(BaseConfig):
+    '''
+    Config class. Config should be defined in the .yaml config file in the 'configs' folder.
+    '''
+    def __init__(self,yaml_file, log_config=False):
+        super().__init__(yaml_file)
 
         self._check_childrens()
 

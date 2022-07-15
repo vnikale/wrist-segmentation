@@ -1,6 +1,6 @@
 from importlib import import_module
 import time
-
+import tensorflow as tf
 
 class BaseModel:
     '''
@@ -22,13 +22,24 @@ class BaseModel:
         self.iscompiled = False
         self.model = model_gen(config)
 
+        if config.DISTRUBUTE_TRAIN:
+            self.mirrored_strategy = tf.distribute.MirroredStrategy(
+                cross_device_ops=tf.distribute.HierarchicalCopyAllReduce())
+
+
     def summary(self):
         self.model.summary(line_length=120)
 
     def compile(self):
-        self.model.compile(optimizer=self.config.OPTIMIZER(lr=self.config.LR),
-                           loss=[self.config.LOSS],
-                           metrics=[self.config.METRIC])
+        if self.config.DISTRUBUTE_TRAIN:
+            with self.mirrored_strategy.scope():
+                self.model.compile(optimizer=self.config.OPTIMIZER(learning_rate=self.config.LR),
+                                   loss=[self.config.LOSS],
+                                   metrics=[self.config.METRIC])
+        else:
+            self.model.compile(optimizer=self.config.OPTIMIZER(learning_rate=self.config.LR),
+                               loss=[self.config.LOSS],
+                               metrics=[self.config.METRIC])
         self.iscompiled = True
 
     def train(self,train=None,valid=None,callbacks=None):

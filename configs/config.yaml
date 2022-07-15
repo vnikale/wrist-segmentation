@@ -1,0 +1,11 @@
+DATA_PATH: 'D:/new_SRW/net/dataset_new/whole_separated/*/*.mat'
+#DATA_PATH: 'D:/new_SRW/net/dataset_new/Augmented_cv_10/*/*.mat'
+INFO_FILE: 'D:\new_SRW\net\dataset_new\Augmented_cv_10\info.xlsx'
+
+TYPE: train #OPTIONS: train - for the split train, cv - for the crossvalidation
+MODEL_CONFIGS: [unet_al, unet_tr_al, unet, unet_tr]
+IMAGE_SIZE: [256, 256]
+LOG_CONFIG: False
+DISTRUBUTE_TRAIN: False
+SEED: 2021
+TESLA_PROGRESS: False
