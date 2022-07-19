@@ -1,20 +1,20 @@
-    ACTIVATION: relu
-    PADDING: same
-    FILTERS: 64
-    NOISE_LEVEL: 0.35
-    PDROP: 0.3
-    K_INITIALIZER: 'he_normal'
-    CHANNELS: 3
-    POOL_SIZE: [2, 2]
-    N_DOWN_LAYERS: 4
-    N_UP_LAYERS: 4
-    MODEL_NAME: 'UNet_AL'
-    LOSS: 'binary_crossentropy'
-    AT_CONV_TYPE: 'none'
-    LR: !!float 5e-3
-    OPTIMIZER: Adam
-    METRIC: dice_coef
-    BATCH_SIZE: 32
-    EPOCHS: 500
-    FIT_VERBOSE: 1
-    SCHEDULER: exp_restart
+ACTIVATION: relu
+PADDING: same
+FILTERS: 64
+NOISE_LEVEL: 0.35
+PDROP: 0.3
+K_INITIALIZER: 'he_normal'
+CHANNELS: 3
+POOL_SIZE: [2, 2]
+N_DOWN_LAYERS: 4
+N_UP_LAYERS: 4
+MODEL_NAME: 'UNet_AL'
+LOSS: 'binary_crossentropy'
+AT_CONV_TYPE: 'none'
+LR: !!float 5e-3
+OPTIMIZER: Adam
+METRIC: dice_coef
+BATCH_SIZE: 32
+EPOCHS: 500
+FIT_VERBOSE: 1
+SCHEDULER: exp_restart

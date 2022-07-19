@@ -38,3 +38,5 @@ var/
 
 # User-generated logs
 /output/logs/
+
+/input/dataset/

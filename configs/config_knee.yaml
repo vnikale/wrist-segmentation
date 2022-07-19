@@ -1,0 +1,11 @@
+
+DATA_PATH: 'input/dataset/knee/*/'
+#INFO_FILE: 'input/dataset/whole_separated/info.xlsx'
+
+TYPE: train #OPTIONS: train - for the split train, cv - for the crossvalidation
+MODEL_CONFIGS: [unet_al, unet_tr_al, unet, unet_tr]
+IMAGE_SIZE: [432, 432]
+LOG_CONFIG: True
+DISTRUBUTE_TRAIN: False
+SEED: 2022
+TESLA_PROGRESS: False

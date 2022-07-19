@@ -1,6 +1,6 @@
-DATA_PATH: 'D:/new_SRW/net/dataset_new/whole_separated/*/*.mat'
-#DATA_PATH: 'D:/new_SRW/net/dataset_new/Augmented_cv_10/*/*.mat'
-INFO_FILE: 'D:\new_SRW\net\dataset_new\Augmented_cv_10\info.xlsx'
+#DATA_PATH: 'input/dataset/Augmented_cv_10/*/*.mat'
+DATA_PATH: 'input/dataset/whole_separated/*/*.mat'
+INFO_FILE: 'input/dataset/whole_separated/info.xlsx'
 
 TYPE: train #OPTIONS: train - for the split train, cv - for the crossvalidation
 MODEL_CONFIGS: [unet_al, unet_tr_al, unet, unet_tr]

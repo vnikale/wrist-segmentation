@@ -95,6 +95,7 @@ class TrainTestDataloaderNii():
     '''
     Full dataset loader from folder to the memory with transformation using functions from the preprocess module.
 
+
     '''
     def __init__(self, folder, pre_args, config, limit = None, pattern = r'\w(\d{1,7})'):
         self.folder = folder
@@ -144,9 +145,10 @@ class TrainTestDataloaderNii():
             subj_len[N] = outputs['data'][name].shape[0]
             i += 1
 
-        # TODO: make it faster, now it very slow
+        # TODO: make it faster, now it is very slow
         for name in names:
             dataset[name] = np.array(dataset[name]).reshape((-1, *self.config.IMAGE_SIZE))
+
         return dataset
 
 

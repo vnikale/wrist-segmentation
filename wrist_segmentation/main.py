@@ -24,22 +24,23 @@ def run_train(cfg):
 
     set_seed(cfg.SEED)
 
+    folder = cfg.DATA_PATH
+
+    pre_args = {'preprocess_func': preprocess.full_preprocess,
+                'size': cfg.IMAGE_SIZE}
+
+    args = {'folder': folder,
+            'pre_args': pre_args,
+            'limit': 2,
+            'config': cfg,
+            }
+
+    loader_ = loader.TrainTestDataloaderMat(**args)
+
+    X, y, subj_len = loader_.load()
+
     net = 0
     for config in configs:
-        folder = config.DATA_PATH
-
-        pre_args = {'preprocess_func': preprocess.full_preprocess,
-                   'size': config.IMAGE_SIZE}
-
-        args = {'folder': folder,
-               'pre_args': pre_args,
-                'limit':2,
-                'config': cfg,
-               }
-
-        loader_ = loader.TrainTestDataloaderMat(**args)
-
-        X, y, subj_len = loader_.load()
         callbacks = gencallbacks(config)
         model = BaseModel.BaseModel(config)
         model.train(train=(X,y), callbacks=callbacks)
@@ -132,9 +133,51 @@ def run_crossvalidation(cfg):
     if cfg.TESLA_PROGRESS:
         os.system(r'Job modify %CCP_JOBID% /progress:' + str(100))
 
+def run_train_knee(cfg):
+    def change_progress(subject, netn, status, nets=4):
+        prg = str(int(100 // nets * netn))
+        msg = subject + ' ' + status + ' '
+        cmd = r'Job modify %CCP_JOBID% /progress:' + prg + r' /progressmsg:"' + msg + '"'
+        os.system(cmd)
+
+    configs = []
+    for cfg_model in cfg.MODEL_CONFIGS:
+        config = Config(cfg_model, log_config=cfg.LOG_CONFIG)
+        config.merge(cfg)
+        configs.append(config)
+
+    set_seed(cfg.SEED)
+
+    folder = cfg.DATA_PATH
+
+    pre_args = {'preprocess_func': preprocess.knee_preprocess,
+                }
+
+    args = {'folder': folder,
+            'pre_args': pre_args,
+            'limit': 2,
+            'config': cfg,
+            }
+
+    loader_ = loader.TrainTestDataloaderNii(**args)
+
+    dataset = loader_.load()
+
+    net = 0
+    for config in configs:
+        callbacks = gencallbacks(config)
+        model = BaseModel.BaseModel(config)
+        model.train(train=(X,y), callbacks=callbacks)
+
+        if cfg.TESLA_PROGRESS:
+            change_progress(config.MODEL_NAME_LOG, net, 'is trained', nets=len(configs))
+        net += 1
+    if cfg.TESLA_PROGRESS:
+        os.system(r'Job modify %CCP_JOBID% /progress:' + str(100))
+
 
 if __name__ == '__main__':
-    config = BaseConfig('config')
+    config = BaseConfig('config_knee')
 
     if config.TYPE == 'cv':
         run_crossvalidation(config)
