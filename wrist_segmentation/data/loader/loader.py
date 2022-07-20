@@ -60,14 +60,14 @@ class TrainTestDataloaderMat():
         paths = glob.glob(self.folder)
         paths = natsorted(paths)
 
+        if self.limit is not None:
+            ind = np.random.randint(0, len(paths), size=self.limit, dtype=int)
+            paths = np.array(paths)[ind]
+
         subjects = list(set(re.findall(self.pattern, str('').join([os.path.dirname(path) for path in paths]))))
         N_pat = np.array([int(subj) for subj in subjects])
         N_pat.sort()
         N_pat = N_pat[-1]
-
-        if self.limit is not None:
-            ind = np.random.randint(0, len(paths), size=self.limit, dtype=int)
-            paths = np.array(paths)[ind]
 
         X = np.zeros((len(paths), *self.config.IMAGE_SIZE, 1))
         y = np.zeros((len(paths), *self.config.IMAGE_SIZE, 1))
@@ -108,16 +108,15 @@ class TrainTestDataloaderNii():
         paths = glob.glob(self.folder)
         paths = natsorted(paths)
 
+        if self.limit is not None:
+            ind = np.random.randint(0, len(paths), size=self.limit, dtype=int)
+            paths = np.array(paths)[ind]
+
         subjects = list(set(re.findall(self.pattern, str('').join(paths))))
         subjects = [int(subj) for subj in subjects]
         subjects.sort()
         N_pat = len(subjects)
         map_subj = dict(zip(subjects,np.arange(0,N_pat)))
-
-
-        if self.limit is not None:
-            ind = np.random.randint(0, len(paths), size=self.limit, dtype=int)
-            paths = np.array(paths)[ind]
 
         subj_len = np.zeros((N_pat,), dtype=np.int)
 
@@ -149,7 +148,7 @@ class TrainTestDataloaderNii():
         for name in names:
             dataset[name] = np.array(dataset[name]).reshape((-1, *self.config.IMAGE_SIZE))
 
-        return dataset
+        return dataset, subj_len
 
 
 

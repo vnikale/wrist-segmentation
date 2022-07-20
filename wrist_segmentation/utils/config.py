@@ -20,6 +20,10 @@ class BaseConfig():
         for k, v in self.config.items():
             setattr(self, k, v)
 
+        if 'DATA_PATH' in self.config.keys():
+            self.DATA_PATH = os.path.join(script_dir, self.DATA_PATH)
+        if 'INFO_FILE' in self.config.keys():
+            self.INFO_FILE = os.path.join(script_dir, self.INFO_FILE)
 
     def merge(self, cfg):
         for k, v in cfg.__dict__.items():
