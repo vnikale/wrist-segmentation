@@ -60,6 +60,8 @@ class TrainTestDataloaderMat():
         paths = glob.glob(self.folder)
         paths = natsorted(paths)
 
+        assert len(paths) != 0, 'In the DATA_PATH not found any relevant folders/files'
+
         if self.limit is not None:
             ind = np.random.randint(0, len(paths), size=self.limit, dtype=int)
             paths = np.array(paths)[ind]
@@ -107,7 +109,7 @@ class TrainTestDataloaderNii():
     def load(self):
         paths = glob.glob(self.folder)
         paths = natsorted(paths)
-
+        assert len(paths) != 0, 'In the DATA_PATH not found any relevant folders/files'
         if self.limit is not None:
             ind = np.random.randint(0, len(paths), size=self.limit, dtype=int)
             paths = np.array(paths)[ind]

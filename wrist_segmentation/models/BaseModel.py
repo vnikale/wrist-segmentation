@@ -9,6 +9,9 @@ class BaseModel:
     '''
     def __init__(self, config):
         self.config = config
+        if config.DISTRUBUTE_TRAIN:
+            self.mirrored_strategy = tf.distribute.MirroredStrategy(
+                cross_device_ops=tf.distribute.HierarchicalCopyAllReduce())
 
         #Generate the model
         try:
@@ -20,11 +23,11 @@ class BaseModel:
             print('Error: module {0:s} is not exist!'.format(model_name))
 
         self.iscompiled = False
-        self.model = model_gen(config)
-
         if config.DISTRUBUTE_TRAIN:
-            self.mirrored_strategy = tf.distribute.MirroredStrategy(
-                cross_device_ops=tf.distribute.HierarchicalCopyAllReduce())
+            with self.mirrored_strategy.scope():
+                self.model = model_gen(config)
+        else:
+            self.model = model_gen(config)
 
 
     def summary(self):

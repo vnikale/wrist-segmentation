@@ -10,21 +10,6 @@ authors = [
   {email = "vladimnikita@gmail.com"},
   {name = "Nikita Vladimirov"}
 ]
-dependencies = [
-    'importlib-metadata; python_version<"3.9"',
-    "natsort==8.1.0",
-    "nibabel==4.0.1",
-    "numpy==1.23.1",
-    "PyYAML==6.0",
-    "scipy==1.8.1",
-    "tensorflow-gpu==2.9.1",
-    "tqdm==4.64.0",
-    "matplotlib==3.5.2",
-    "opencv-python",
-    'pandas',
-    'sklearn',
-    'openpyxl'
-]
 
 [tool.setuptools.packages.find]
 where = ["wrist_segmentation"]  # ["."] by default

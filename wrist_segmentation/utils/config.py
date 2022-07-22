@@ -21,7 +21,7 @@ class BaseConfig():
             setattr(self, k, v)
 
         if 'DATA_PATH' in self.config.keys():
-            self.DATA_PATH = os.path.join(script_dir, self.DATA_PATH)
+                self.DATA_PATH = os.path.join(script_dir, self.DATA_PATH)
         if 'INFO_FILE' in self.config.keys():
             self.INFO_FILE = os.path.join(script_dir, self.INFO_FILE)
 
