@@ -12,6 +12,6 @@ authors = [
 ]
 
 [tool.setuptools.packages.find]
-where = ["wrist_segmentation"]  # ["."] by default
+where = [".", "wrist_segmentation"]  # ["."] by default
 include = ["wrist_segmentation*"]  # ["*"] by default
 namespaces = false  # true by default
