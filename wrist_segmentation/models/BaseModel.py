@@ -29,6 +29,18 @@ class BaseModel:
         else:
             self.model = model_gen(config)
 
+        if 'WEIGHTS_PATH' in config.keys() and 'FINETUNE' in config.keys():
+            if config.FINETUNE:
+                if config.DISTRUBUTE_TRAIN:
+                    with self.mirrored_strategy.scope():
+                        self.compile()
+                        self.model.load_weights(config.WEIGHTS_PATH)
+                else:
+                    self.compile()
+                    self.model.load_weights(config.WEIGHTS_PATH)
+
+                print(f'Finetuning, loaded {config.WEIGHTS_PATH}')
+
 
     def summary(self):
         self.model.summary(line_length=120)
@@ -83,8 +95,8 @@ class BaseModel:
         config = self.config
 
         if not self.iscompiled:
-            self.model.compile(optimizer=config.OPTIMIZER(lr=config.LR), loss=[config.LOSS], metrics=[config.METRIC])
-            self.iscompiled = True
+            # self.model.compile(optimizer=config.OPTIMIZER(lr=config.LR), loss=[config.LOSS], metrics=[config.METRIC])
+            self.compile()
 
         self.model.load_weights(model_path)
         print("Loaded: ",model_path)

@@ -150,6 +150,10 @@ class TrainTestDataloaderNii():
         for name in names:
             dataset[name] = np.array(dataset[name]).reshape((-1, *self.config.IMAGE_SIZE))
 
+            # add last dimension for the tensorflow input data's size requirements
+            if len(dataset[name].shape) == 3:
+                dataset[name] = np.expand_dims(dataset[name], axis=-1)
+
         return dataset, subj_len
 
 
