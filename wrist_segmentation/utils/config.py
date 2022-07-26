@@ -45,6 +45,9 @@ class Config(BaseConfig):
         self.logdir = os.path.join(self.MYFOLDER, 'output', self.LOGDIRECTORY, self.MODEL_NAME_LOG)
         self.make_dirs(self.logdir)
 
+        if 'WEIGHTS_PATH' in self.config.keys():
+            self.WEIGHTS_PATH = os.path.join(self.MYFOLDER, self.WEIGHTS_PATH)
+
         if log_config:
             self.log_config()
 

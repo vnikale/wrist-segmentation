@@ -29,7 +29,7 @@ class BaseModel:
         else:
             self.model = model_gen(config)
 
-        if 'WEIGHTS_PATH' in config.config.keys() and 'FINETUNE' in config.config.keys():
+        if 'WEIGHTS_PATH' in config.__dict__.keys() and 'FINETUNE' in config.__dict__.keys():
             if config.FINETUNE:
                 if config.DISTRUBUTE_TRAIN:
                     with self.mirrored_strategy.scope():
