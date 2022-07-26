@@ -40,3 +40,4 @@ var/
 /output/logs/
 
 /input/dataset/
+/wrist_segmentation/gui/

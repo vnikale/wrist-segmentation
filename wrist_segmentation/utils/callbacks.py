@@ -4,6 +4,7 @@ import tensorflow as tf
 from .metrics import dice_coef
 from datetime import datetime
 import os
+from .other import make_rgb
 
 def schedule(lr0):
     def sch(epoch, lr):
@@ -31,18 +32,6 @@ def gencallbacks(config):
         callbacks.append(tf.keras.callbacks.LearningRateScheduler(schedule(config.LR),verbose=1))
 
     return callbacks
-
-
-def make_rgb(image):
-    img_rgb = np.copy(image)
-    img_rgb = np.append(img_rgb,image,axis=3)
-    img_rgb = np.append(img_rgb,image,axis=3)
-
-    img_rgb_normalized = img_rgb - np.min(img_rgb)
-    img_rgb_normalized /= np.max(img_rgb) - np.min(img_rgb)
-    # img_rgb_normalized = img_as_ubyte(img_rgb_normalized)
-
-    return img_rgb_normalized
 
 class TensorBoardImage(Callback):
     def __init__(self, log_dir, model, x, y, freq=1):
