@@ -17,7 +17,7 @@ class BaseModel:
         try:
             model_name = config.MODEL_NAME
             print('Importing {0:s}'.format(model_name))
-            module = import_module('models.' + model_name)
+            module = import_module('wrist_segmentation.models.' + model_name)
             model_gen = module.model_gen
         except:
             print('Error: module {0:s} is not exist!'.format(model_name))

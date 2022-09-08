@@ -64,7 +64,7 @@ def expand_img(image, size, with_noise=False):
     :param with_noise: expand with noise or zeros
     :return: expanded to the size image
     '''
-    assert np.size(image, 0) > size[0] and np.size(image, 1) > size[1], 'The image size larger the expanded size'
+    assert np.size(image, 0)*np.size(image, 1) < size[0]*size[0], 'The image size larger the expanded size'
 
     if with_noise:
         expanded = np.zeros(size)

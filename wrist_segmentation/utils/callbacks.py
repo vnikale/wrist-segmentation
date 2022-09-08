@@ -76,7 +76,7 @@ class TensorBoardImage(Callback):
 
             image0_rgb = make_rgb(image0)
             image1 = np.copy(image0_rgb)
-            image1[...,1] = image1[...,1] + mask[...,0]
+            image1[..., 1] = image1[..., 1] + mask[..., 0]
             image1[image1>1] = 1
 
             self.write_image(image1, 'Ground-Truth', "Ground-Truth", epoch+1)

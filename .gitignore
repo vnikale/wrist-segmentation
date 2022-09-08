@@ -37,7 +37,8 @@ var/
 *.egg
 
 # User-generated logs
-/output/logs/
+/output/
 
 /input/dataset/
 /wrist_segmentation/gui/
+/configs/config_gui.yaml

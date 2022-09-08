@@ -1,0 +1,14 @@
+
+DATA_PATH: 'D:\new_SRW\wrist_segmentation\input\dataset\20220809\00_0005_t1-3dvibe-cor-we-fs-fov105'
+#INFO_FILE: 'input/dataset/whole_separated/info.xlsx'
+
+TYPE: test #OPTIONS: train - for the split train, cv - for the crossvalidation
+MODEL_CONFIGS: [unet_al]
+
+LOG_CONFIG: True
+DISTRUBUTE_TRAIN: False
+SEED: 2022
+TESLA_PROGRESS: False
+LIMIT: 2
+#TEST_SUBJECTS: [0, 4, 9] #numbers of subjects to use in test from 0 to N
+TEST_SUBJECTS: [0] #numbers of subjects to use in test from 0 to N

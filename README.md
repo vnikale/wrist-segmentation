@@ -21,6 +21,8 @@ Examples of segmentation from [[1]]:
 - `./output` - folder containing output files e.g. plots etc
 
 # Installation
+
+[comment]: <> (TODO: upadting and etc)
 In order to install the project you should have installed pip and use the following command inside the repo folder:
 ```
 pip install -e .
