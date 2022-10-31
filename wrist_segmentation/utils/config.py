@@ -5,9 +5,13 @@ from pathlib import Path
 from tensorflow.keras.optimizers import Adam
 from .metrics import dice_coef
 
+from .. import definitions
+from definitions import APP_PATH
+
 class BaseConfig():
     def __init__(self, yaml_file):
-        script_dir = Path(__file__).parents[2]
+        script_dir = Path(APP_PATH)
+        # script_dir = Path(__file__).parents[2]
         self.MYFOLDER = script_dir
 
         file_path = os.path.join(script_dir, 'configs', yaml_file + '.yaml')

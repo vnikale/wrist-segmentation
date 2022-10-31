@@ -1,5 +1,5 @@
 
-DATA_PATH: 'input/dataset/knee/*/'
+DATA_PATH: 'input/dataset/knee/*'
 #INFO_FILE: 'input/dataset/whole_separated/info.xlsx'
 
 TYPE: train_knee #OPTIONS: train - for the split train, cv - for the crossvalidation
@@ -12,3 +12,7 @@ TESLA_PROGRESS: False
 LIMIT: 2
 #TEST_SUBJECTS: [0, 4, 9] #numbers of subjects to use in test from 0 to N
 TEST_SUBJECTS: [0] #numbers of subjects to use in test from 0 to N
+
+AUGMENT: True
+AUGMENT_FACTOR: 10
+AUGMENT_FOLD: 'input/dataset/knee_augmented_' #augment factor will be added in the end

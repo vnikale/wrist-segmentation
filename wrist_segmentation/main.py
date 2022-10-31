@@ -5,7 +5,7 @@ import wrist_segmentation.data.loader as loader
 from wrist_segmentation.utils.config import Config, BaseConfig
 from wrist_segmentation.models import BaseModel
 from wrist_segmentation.utils.callbacks import TensorBoardImage, gencallbacks
-from wrist_segmentation.utils.other import set_seed
+from wrist_segmentation.utils.other import set_seed, augment
 
 import tensorflow as tf
 import os
@@ -154,6 +154,7 @@ def run_train_knee(cfg):
     '''
     import numpy as np
     from datetime import datetime
+    from pathlib import Path
 
     def change_progress(subject, netn, status, nets=4):
         prg = str(int(100 // nets * netn))
@@ -203,9 +204,40 @@ def run_train_knee(cfg):
         test = cfg.TEST_SUBJECTS
         train_X, train_y = get_folds(train, X, y)
         test_X, test_y = get_folds(test, X, y)
+        subj_len_test = subj_len[test]
+        subj_len_train = subj_len[train]
     else:
         train_X, train_y = X, y
         test_X, test_y = X, y
+        subj_len_test = subj_len
+        subj_len_train = subj_len
+
+    if 'AUGMENT' in cfg.__dict__:
+        if cfg.AUGMENT:
+            pat_len = subj_len_train[subj_len_train != 0]
+            if 'AUGMENT_FOLD' in cfg.__dict__:
+                fold = cfg.AUGMENT_FOLD
+                script_dir = Path(__file__).parents[1]
+                fold = os.path.join(script_dir, fold)
+            else:
+                fold = r'C:\users\nikita.vladimirov\Augmented_'
+
+            if 'AUGMENT_FACTOR' in cfg.__dict__:
+                factor = cfg.AUGMENT_FACTOR
+            else:
+                factor = 10
+
+            if not os.path.exists(fold + str(factor) + '\\'):
+                augment(train_X, train_y, fold=fold, pat_len=pat_len, factor=factor)
+            # More gracefully solution is needed
+            args_a = {'folder': fold + str(factor) + '//*//*.mat',
+                    'pre_args': {'preprocess_func': preprocess.cv_preprocess,
+                                 'size': cfg.IMAGE_SIZE},
+                    'limit': None,
+                    'config': cfg,
+                    }
+            loader2 = loader.TrainTestDataloaderMat(**args_a)
+            train_X, train_y, subj_len_train = loader2.load()
 
     net = 0
     for config in configs:
@@ -222,6 +254,8 @@ def run_train_knee(cfg):
         net += 1
     if cfg.TESLA_PROGRESS:
         os.system(r'Job modify %CCP_JOBID% /progress:' + str(100))
+
+# def augment_data_knee(config):
 
 
 if __name__ == '__main__':

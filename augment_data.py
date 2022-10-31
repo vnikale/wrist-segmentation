@@ -1,25 +1,12 @@
-import numpy as np
-import tensorflow as tf
-from scipy.io import savemat
+
 import albumentations as albu
-import os
-from tqdm import tqdm
 import cv2
-
-def set_seed(seed):
-    tf.random.set_seed(seed)
-    np.random.seed(seed)
-
-def make_rgb(image):
-    img_rgb = np.copy(image)
-    img_rgb = np.append(img_rgb,image,axis=3)
-    img_rgb = np.append(img_rgb,image,axis=3)
-
-    img_rgb_normalized = img_rgb - np.min(img_rgb)
-    img_rgb_normalized /= np.max(img_rgb) - np.min(img_rgb)
-    # img_rgb_normalized = img_as_ubyte(img_rgb_normalized)
-
-    return img_rgb_normalized
+from scipy.io import savemat
+import os
+from datagen.dataload import cv_load_data,load_data_ft,load_data
+import config as conf
+import numpy as np
+from tqdm import tqdm
 
 def aug_transforms():
     return [
@@ -84,3 +71,13 @@ def augment(X, y, factor=10, fold='Augmented', pat_len=None):
                             a = transforms(image=set_imag[summ[k] + j, :, :, 0], mask=set_mask[summ[k] + j, :, :, 0])
                             mdic = {"original": a['image'] / np.max(a['image']), "mask": a['mask']}
                             savemat(os.path.join(path, 'Slice{0}.mat'.format(i * nn + j)), mdic)
+
+config = conf.Config(log=False)
+# dataFold = r'C:\users\nikita.vladimirov\whole_separated'
+dataFold = r'\\store.metalab.ifmo.ru\users\nikita.vladimirov\nikita.vladimirov\finetuning_whole_fix'
+paths = dataFold + '/*/*.mat'
+X,y,pat_len = load_data_ft(paths=paths,config=config)
+
+pat_len = pat_len[pat_len!=0]
+fold = r'C:\users\nikita.vladimirov\Augmented_fine_tuning_whole_fix_3_'
+augment(X,y,fold=fold,pat_len=pat_len,factor=10)
